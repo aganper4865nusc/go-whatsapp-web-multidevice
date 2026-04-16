@@ -19,6 +19,7 @@ import (
 // @BasePath		/
 func main() {
 	if err := cmd.Execute(); err != nil {
+		// Print error to stderr and exit with non-zero status code
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
