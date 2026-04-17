@@ -41,7 +41,7 @@ func Load() {
 		WhatsappWebhook:           getEnv("WHATSAPP_WEBHOOK", ""),
 		WhatsappWebhookSecret:     getEnv("WHATSAPP_WEBHOOK_SECRET", ""),
 		WhatsappAccountValidation: getEnvBool("WHATSAPP_ACCOUNT_VALIDATION", true),
-		WhatsappLogLevel:          getEnv("WHATSAPP_LOG_LEVEL", "ERROR"),
+		WhatsappLogLevel:          getEnv("WHATSAPP_LOG_LEVEL", "WARN"), // changed from ERROR to WARN to catch more issues during development
 		DBPath:                    getEnv("DB_PATH", "./storages"),
 		OSName:                    getEnv("OS_NAME", "Mac OS 10"),
 	}
