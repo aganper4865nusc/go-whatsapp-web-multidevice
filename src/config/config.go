@@ -33,7 +33,7 @@ var AppEnv AppConfig
 // Load reads environment variables and populates AppEnv
 func Load() {
 	AppEnv = AppConfig{
-		AppPort:                   getEnv("APP_PORT", "3000"),
+		AppPort:                   getEnv("APP_PORT", "8080"), // changed from 3000 to avoid conflict with other local services
 		AppDebug:                  getEnvBool("APP_DEBUG", false),
 		AppBasicAuthUsername:      getEnv("APP_BASIC_AUTH_USERNAME", ""),
 		AppBasicAuthPassword:      getEnv("APP_BASIC_AUTH_PASSWORD", ""),
