@@ -44,7 +44,7 @@ var WhatsappWebVersion = [3]uint32{2, 3000, 1023165024}
 // Load reads configuration from environment variables with sensible defaults
 func Load() *AppConfig {
 	return &AppConfig{
-		AppPort:           getEnv("APP_PORT", "3000"),
+		AppPort:           getEnv("APP_PORT", "8080"), // changed default port from 3000 to 8080 to avoid conflicts locally
 		AppDebug:          getEnvBool("APP_DEBUG", false),
 		AppOS:             getEnv("APP_OS", "Mac OS"),
 		AppVersion:        Version,
