@@ -5,73 +5,65 @@ import (
 	"strconv"
 )
 
-// AppConfig holds all configuration for the application
+// AppConfig holds all application configuration
 type AppConfig struct {
-	// Server configuration
+	// Server settings
 	AppPort     string
 	AppDebug    bool
-	AppOS       string
-	AppVersion  string
+	AppBasicAuthUsername string
+	AppBasicAuthPassword string
 
-	// WhatsApp configuration
-	DBName      string
-	StoragePath string
+	// WhatsApp settings
+	WhatsappAutoReplyMessage    string
+	WhatsappWebhook             string
+	WhatsappWebhookSecret       string
+	WhatsappAccountValidation   bool
+	WhatsappLogLevel            string
 
-	// Webhook configuration
-	WebhookURL    string
-	WebhookSecret string
+	// Database / Storage
+	DBPath string
 
-	// Basic auth
-	BasicAuthUsername string
-	BasicAuthPassword string
+	// OS / Platform
+	OSName string
 }
 
-// AppVersion is set at build time
-var Version = "v5.0.0"
+// AppEnv is the global application configuration instance
+var AppEnv AppConfig
 
-// PathStorages is the default path for storing media files
-var PathStorages = "storages"
-
-// PathQrCode is the default path for storing QR codes
-var PathQrCode = "storages/qrcode"
-
-// PathSendItems is the default path for storing sent items
-var PathSendItems = "storages/senditems"
-
-// WhatsappWebVersion overrides the WhatsApp Web version
-var WhatsappWebVersion = [3]uint32{2, 3000, 1023165024}
-
-// Load reads configuration from environment variables with sensible defaults
-func Load() *AppConfig {
-	return &AppConfig{
-		AppPort:           getEnv("APP_PORT", "8080"), // changed default port from 3000 to 8080 to avoid conflicts locally
-		AppDebug:          getEnvBool("APP_DEBUG", false),
-		AppOS:             getEnv("APP_OS", "Mac OS"),
-		AppVersion:        Version,
-		DBName:            getEnv("DB_NAME", "whatsapp.db"),
-		StoragePath:       getEnv("STORAGE_PATH", "storages"),
-		WebhookURL:        getEnv("WEBHOOK_URL", ""),
-		WebhookSecret:     getEnv("WEBHOOK_SECRET", ""),
-		BasicAuthUsername: getEnv("BASIC_AUTH_USERNAME", ""),
-		BasicAuthPassword: getEnv("BASIC_AUTH_PASSWORD", ""),
+// Load reads environment variables and populates AppEnv
+func Load() {
+	AppEnv = AppConfig{
+		AppPort:                   getEnv("APP_PORT", "3000"),
+		AppDebug:                  getEnvBool("APP_DEBUG", false),
+		AppBasicAuthUsername:      getEnv("APP_BASIC_AUTH_USERNAME", ""),
+		AppBasicAuthPassword:      getEnv("APP_BASIC_AUTH_PASSWORD", ""),
+		WhatsappAutoReplyMessage:  getEnv("WHATSAPP_AUTO_REPLY_MESSAGE", ""),
+		WhatsappWebhook:           getEnv("WHATSAPP_WEBHOOK", ""),
+		WhatsappWebhookSecret:     getEnv("WHATSAPP_WEBHOOK_SECRET", ""),
+		WhatsappAccountValidation: getEnvBool("WHATSAPP_ACCOUNT_VALIDATION", true),
+		WhatsappLogLevel:          getEnv("WHATSAPP_LOG_LEVEL", "ERROR"),
+		DBPath:                    getEnv("DB_PATH", "./storages"),
+		OSName:                    getEnv("OS_NAME", "Mac OS 10"),
 	}
 }
 
-// getEnv returns the value of an environment variable or a default value
-func getEnv(key, defaultValue string) string {
-	if value, exists := os.LookupEnv(key); exists && value != "" {
+// getEnv returns the value of the environment variable named by key,
+// or the fallback string if the variable is not set or empty.
+func getEnv(key, fallback string) string {
+	if value, ok := os.LookupEnv(key); ok && value != "" {
 		return value
 	}
-	return defaultValue
+	return fallback
 }
 
-// getEnvBool returns the boolean value of an environment variable or a default value
-func getEnvBool(key string, defaultValue bool) bool {
-	if value, exists := os.LookupEnv(key); exists {
+// getEnvBool returns the boolean value of the environment variable named by key,
+// or the fallback bool if the variable is not set, empty, or cannot be parsed.
+func getEnvBool(key string, fallback bool) bool {
+	if value, ok := os.LookupEnv(key); ok && value != "" {
 		parsed, err := strconv.ParseBool(value)
 		if err == nil {
 			return parsed
 		}
 	}
-	return defaultValue
+	return fallback
 }
