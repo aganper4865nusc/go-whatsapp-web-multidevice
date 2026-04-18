@@ -32,7 +32,7 @@ var App AppConfig
 func Load() {
 	App = AppConfig{
 		// Server
-		AppPort:      getEnv("APP_PORT", "3000"),
+		AppPort:      getEnv("APP_PORT", "8080"), // changed from 3000 to avoid conflicts with other local services
 		AppDebug:     getEnvBool("APP_DEBUG", false),
 		AppBasicAuth: getEnv("APP_BASIC_AUTH", ""),
 
@@ -46,7 +46,7 @@ func Load() {
 
 		// Storage
 		StorageLocal: getEnv("STORAGE_LOCAL", "./storages"),
-		MaxFileSize:  getEnvInt64("MAX_FILE_SIZE", 10*1024*1024), // 10MB default
+		MaxFileSize:  getEnvInt64("MAX_FILE_SIZE", 25*1024*1024), // increased to 25MB to handle larger media files
 	}
 }
 
