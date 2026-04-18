@@ -10,21 +10,19 @@ type AppConfig struct {
 	// Server settings
 	AppPort     string
 	AppDebug    bool
-	AppBasePath string
+	AppBasicAuth string
 
 	// WhatsApp settings
-	WhatsappAutoReplyMessage    string
-	WhatsappWebhookURL          string
-	WhatsappWebhookSecret       string
-	WhatsappAccountValidation   bool
-	WhatsappLogLevel            string
+	WhatsAppDataPath    string
+	WhatsAppAutoReply   string
+
+	// Webhook settings
+	WebhookURL          string
+	WebhookSecret       string
 
 	// Storage settings
-	StoragePath string
-
-	// Basic auth settings
-	BasicAuthUsername string
-	BasicAuthPassword string
+	StorageLocal        string
+	MaxFileSize         int64
 }
 
 // App is the global application configuration instance
@@ -34,23 +32,21 @@ var App AppConfig
 func Load() {
 	App = AppConfig{
 		// Server
-		AppPort:     getEnv("APP_PORT", "3000"),
-		AppDebug:    getEnvBool("APP_DEBUG", false),
-		AppBasePath: getEnv("APP_BASE_PATH", ""),
+		AppPort:      getEnv("APP_PORT", "3000"),
+		AppDebug:     getEnvBool("APP_DEBUG", false),
+		AppBasicAuth: getEnv("APP_BASIC_AUTH", ""),
 
 		// WhatsApp
-		WhatsappAutoReplyMessage:  getEnv("WHATSAPP_AUTO_REPLY_MESSAGE", ""),
-		WhatsappWebhookURL:        getEnv("WHATSAPP_WEBHOOK_URL", ""),
-		WhatsappWebhookSecret:     getEnv("WHATSAPP_WEBHOOK_SECRET", ""),
-		WhatsappAccountValidation: getEnvBool("WHATSAPP_ACCOUNT_VALIDATION", true),
-		WhatsappLogLevel:          getEnv("WHATSAPP_LOG_LEVEL", "ERROR"),
+		WhatsAppDataPath:  getEnv("WHATSAPP_DATA_PATH", "./storages"),
+		WhatsAppAutoReply: getEnv("WHATSAPP_AUTO_REPLY", ""),
+
+		// Webhook
+		WebhookURL:    getEnv("WEBHOOK_URL", ""),
+		WebhookSecret: getEnv("WEBHOOK_SECRET", ""),
 
 		// Storage
-		StoragePath: getEnv("STORAGE_PATH", "./storages"),
-
-		// Basic Auth
-		BasicAuthUsername: getEnv("BASIC_AUTH_USERNAME", ""),
-		BasicAuthPassword: getEnv("BASIC_AUTH_PASSWORD", ""),
+		StorageLocal: getEnv("STORAGE_LOCAL", "./storages"),
+		MaxFileSize:  getEnvInt64("MAX_FILE_SIZE", 10*1024*1024), // 10MB default
 	}
 }
 
@@ -66,6 +62,17 @@ func getEnv(key, defaultValue string) string {
 func getEnvBool(key string, defaultValue bool) bool {
 	if value, exists := os.LookupEnv(key); exists {
 		parsed, err := strconv.ParseBool(value)
+		if err == nil {
+			return parsed
+		}
+	}
+	return defaultValue
+}
+
+// getEnvInt64 retrieves an int64 environment variable or returns a default
+func getEnvInt64(key string, defaultValue int64) int64 {
+	if value, exists := os.LookupEnv(key); exists {
+		parsed, err := strconv.ParseInt(value, 10, 64)
 		if err == nil {
 			return parsed
 		}
