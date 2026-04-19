@@ -65,6 +65,7 @@ func getEnvBool(key string, defaultValue bool) bool {
 		if err == nil {
 			return parsed
 		}
+		// note: invalid bool values are silently ignored and fall through to default
 	}
 	return defaultValue
 }
@@ -76,6 +77,7 @@ func getEnvInt64(key string, defaultValue int64) int64 {
 		if err == nil {
 			return parsed
 		}
+		// note: invalid int64 values are silently ignored and fall through to default
 	}
 	return defaultValue
 }
