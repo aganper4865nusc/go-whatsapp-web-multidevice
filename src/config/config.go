@@ -72,13 +72,14 @@ func getEnvBool(key string, defaultValue bool) bool {
 
 // getEnvInt64 retrieves an int64 environment variable or returns a default
 // Returns defaultValue if the key is not set or if the value cannot be parsed as a base-10 integer.
+// Note: negative values are technically accepted by ParseInt; callers should validate if needed.
 func getEnvInt64(key string, defaultValue int64) int64 {
 	if value, exists := os.LookupEnv(key); exists {
 		parsed, err := strconv.ParseInt(value, 10, 64)
-		if err == nil {
+		if err == nil && parsed > 0 {
 			return parsed
 		}
-		// note: invalid int64 values are silently ignored and fall through to default
+		// note: invalid or non-positive int64 values fall through to default
 	}
 	return defaultValue
 }
