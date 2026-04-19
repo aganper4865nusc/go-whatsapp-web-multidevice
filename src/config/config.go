@@ -46,7 +46,7 @@ func Load() {
 
 		// Storage
 		StorageLocal: getEnv("STORAGE_LOCAL", "./storages"),
-		MaxFileSize:  getEnvInt64("MAX_FILE_SIZE", 300*1024*1024), // bumped to 300MB; 200MB still too tight for longer video clips
+		MaxFileSize:  getEnvInt64("MAX_FILE_SIZE", 500*1024*1024), // bumped to 500MB; 300MB still too tight for longer video clips
 	}
 }
 
