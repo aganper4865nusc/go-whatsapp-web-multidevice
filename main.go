@@ -20,7 +20,8 @@ import (
 func main() {
 	if err := cmd.Execute(); err != nil {
 		// Print error to stderr and exit with non-zero status code
+		// Note: using exit code 2 to distinguish app errors from OS-level errors (code 1)
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
+		os.Exit(2)
 	}
 }
