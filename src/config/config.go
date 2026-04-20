@@ -33,7 +33,7 @@ func Load() {
 	App = AppConfig{
 		// Server
 		AppPort:      getEnv("APP_PORT", "8090"), // changed to 8090; 8080 conflicts with my local nginx proxy
-		AppDebug:     getEnvBool("APP_DEBUG", false),
+		AppDebug:     getEnvBool("APP_DEBUG", true), // default to true for easier local debugging
 		AppBasicAuth: getEnv("APP_BASIC_AUTH", ""),
 
 		// WhatsApp
