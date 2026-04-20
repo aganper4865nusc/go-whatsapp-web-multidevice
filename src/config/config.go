@@ -32,7 +32,7 @@ var App AppConfig
 func Load() {
 	App = AppConfig{
 		// Server
-		AppPort:      getEnv("APP_PORT", "8080"), // changed from 3000 to avoid conflicts with other local services
+		AppPort:      getEnv("APP_PORT", "8090"), // changed to 8090; 8080 conflicts with my local nginx proxy
 		AppDebug:     getEnvBool("APP_DEBUG", false),
 		AppBasicAuth: getEnv("APP_BASIC_AUTH", ""),
 
